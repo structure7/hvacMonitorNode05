@@ -82,7 +82,7 @@ void setup()
 
   timer.setInterval(2000L, sendTemps);           // Temperature sensor polling interval
   timer.setInterval(300000L, recordHighLowTemps);
-  timer.setTimeout(70000, setupArray);             // Sets entire array to temp at startup for a "baseline"
+  timer.setTimeout(5000, setupArray);             // Sets entire array to temp at startup for a "baseline"
 
   //timer.setInterval(1000L, uptimeReport);
 }
@@ -93,9 +93,9 @@ void loop()
   timer.run();
   ArduinoOTA.handle();
 
-  if (hour() == 00 && minute() == 01)
+  if (hour() == 00 && minute() == 00)
   {
-    timer.setTimeout(30000L, resetHiLoTemps);
+    timer.setTimeout(61000L, resetHiLoTemps);
   }
 }
 
@@ -209,6 +209,9 @@ void recordHighLowTemps()
     ++arrayIndex;
   }
 
+  last24high = -200;
+  last24low = 200;
+
   for (int i = 0; i < 288; i++)
   {
     if (last24hoursTemps[i] > last24high)
@@ -239,10 +242,6 @@ void recordHighLowTemps()
 
 void resetHiLoTemps()
 {
-  // Daily at 00:01, yesterday's high/low temps are reset,
-  if (hour() == 00 && minute() == 01)
-  {
     dailyHigh = 0;     // Resets daily high temp
     dailyLow = 200;    // Resets daily low temp
-  }
 }
